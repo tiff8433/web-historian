@@ -38,7 +38,11 @@ exports.readListOfUrls = function(callback){
   });
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url, callback){
+  exports.readListOfUrls(function(data){
+    var found = (_.contains(data, url));
+      callback(found);
+    });
 };
 
 exports.addUrlToList = function(){
