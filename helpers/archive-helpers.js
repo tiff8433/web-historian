@@ -55,7 +55,16 @@ exports.addUrlToList = function(url, callback){
   });
 };
 
-exports.isUrlArchived = function(){
+exports.isUrlArchived = function(url, callback){
+  fs.readdir(exports.paths.archivedSites, function (err, data) {
+     if (err) {
+         return console.error(err);
+     } else {
+      //var temp = data.toString().split('\n');
+      var found = (_.contains(data, url));
+      callback(found);
+     }
+  });
 };
 
 exports.downloadUrls = function(){
