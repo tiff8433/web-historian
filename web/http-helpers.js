@@ -16,24 +16,30 @@ exports.serveAssets = function(res, asset, callback) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
 
+    //looking in the public folder:
     fs.readFile(archive.paths.siteAssets + asset, {encoding: 'utf8'}, function (err,data) {
       if (err) {
-        res.writeHead(404);
-        res.end(JSON.stringify(err));
-        return;
+        //looking in the archive folder
+        fs.readFile(archive.paths.archivedSites + asset, {encoding: 'utf8'}, function (err,data) {
+          if (err){
+            exports.send404(res);
+          } else {
+            exports.sendResponse(res, data);
+          }
+        });
       } else {
         exports.sendResponse(res, data)
       }
     });
-
 };
 
 exports.sendResponse = function(res, obj, status) {
   status= status || 200;
   res.writeHead(status, headers);
   res.end(obj);
+};
+
+exports.send404 = function(res) {
+  exports.sendResponse(res, 'file not found', 404);
 }
 
-
-
-// As you progress, keep thinking about what helper functions you can put here!
