@@ -14,6 +14,7 @@ exports.handleRequest = function (request, response) {
   }
   if (request.method === 'POST'){
     exports.collectData(request);
+    archive.downloadUrls();
   }
 };
 
