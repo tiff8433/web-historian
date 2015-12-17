@@ -7,10 +7,31 @@ var urlParser = require ('url');
 
 exports.handleRequest = function (request, response) {
   console.log('Serving ' + request.method + ' to path ' + request.url);
- // var paths = urlParser.parse(request.url);
+  //console.log(archive.readListOfUrls());
   var urlPath = request.url === '/' ? '/index.html' : request.url;
-
   if (request.method === 'GET'){
     helpers.serveAssets(response, urlPath);
   }
+  if (request.method === 'POST'){
+    exports.collectData(request);
+  }
+};
+
+/*POST:
+  capture the URL 
+  find out if requested URL is in archive/sites
+  if it is
+    send back the data
+  else
+    add it to the file (add it to the queue to be scraped)
+*/
+
+exports.collectData = function(request, callback){
+  var data = "";
+  request.on('data', function(chunk){
+    data += chunk;
+  });
+  request.on('end', function(){
+    callback(data);
+  });
 };

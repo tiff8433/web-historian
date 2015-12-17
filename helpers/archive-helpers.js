@@ -26,19 +26,16 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(){
-  // console.log('exports.paths.list', exports.paths.list)
-  // fs.readFile(exports.paths.list, function(err,data){
-  //   if (err) throw err;
-  // });
-
- // });
-// fs.readFile('/etc/passwd', function (err, data) {
-//   if (err) throw err;
-//   console.log(data);
-// });
-
-
+exports.readListOfUrls = function(callback){
+//http://www.tutorialspoint.com/nodejs/nodejs_file_system.htm
+  fs.readFile(exports.paths.list, function (err, data) {
+     if (err) {
+         return console.error(err);
+     } else {
+      callback(data.toString().split('\n'));
+      //console.log("Asynchronous read: " + data.split('\n'));
+     }
+  });
 };
 
 exports.isUrlInList = function(){
