@@ -34,7 +34,6 @@ exports.readListOfUrls = function(callback){
          return console.error(err);
      } else {
       callback(data.toString().split('\n'));
-      //console.log("Asynchronous read: " + data.split('\n'));
      }
   });
 };
