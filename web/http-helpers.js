@@ -41,5 +41,11 @@ exports.sendResponse = function(res, obj, status) {
 
 exports.send404 = function(res) {
   exports.sendResponse(res, 'file not found', 404);
-}
+};
+
+exports.sendRedirect = function(res, location, status){
+  status = status || 302;
+  res.writeHead(status, {Location: location});
+  res.end();
+};
 

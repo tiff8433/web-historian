@@ -13,19 +13,30 @@ exports.handleRequest = function (request, response) {
     helpers.serveAssets(response, urlPath);
   }
   if (request.method === 'POST'){
-    exports.collectData(request);
-    archive.downloadUrls();
+    //collect the data
+    exports.collectData(request, function(data){
+      var url = JSON.parse(data).url.replace('http://', '');
+      //var url = urlTemp.split('=')[1];
+    //is it in our sites.txt
+      if(archive.isUrlInList(url, function(found){
+        if (found){
+          archive.isUrlArchived(url, function(exists){
+            if (exists){
+              helpers.sendRedirect(response, '/' + url);
+            } else {
+              helpers.sendRedirect(response, '/loading.html');
+            }
+          });
+        } else {
+        //append to sites.txt
+        archive.addUrlToList(url, function(){
+          helpers.sendRedirect(response, '/loading.html');
+        });
+      }
+    }));
+  });
   }
 };
-
-/*POST:
-  capture the URL 
-  find out if requested URL is in archive/sites
-  if it is
-    send back the data
-  else
-    add it to the file (add it to the queue to be scraped)
-*/
 
 exports.collectData = function(request, callback){
   var data = "";
