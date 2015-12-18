@@ -6,8 +6,7 @@ var url = require ('url');
 // require more modules/folders here!
 
 exports.handleRequest = function (request, response) {
-  //console.log('Serving ' + request.method + ' to path ' + request.url);
-  //console.log(archive.readListOfUrls());
+
   var urlPath = request.url === '/' ? '/index.html' : request.url;
   if (request.method === 'GET'){
     helpers.serveAssets(response, urlPath);
@@ -34,10 +33,6 @@ exports.handleRequest = function (request, response) {
         //append to sites.txt
         console.log('line33')
         archive.addUrlToList(urlTemp, function(){
-           console.log('data', data);
-           console.log('urlTemp', urlTemp);
-          // console.log('urlTemp2', urlTemp2);
-
           helpers.sendRedirect(response, '/loading.html');  
         });
       }
