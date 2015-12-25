@@ -11,11 +11,39 @@ exports.headers = headers = {
 };
 
 exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+  fs.readFile(archive.paths.siteAssets + asset, {encoding: 'utf8'}, function(error, data){
+    if (error) {
+      fs.readFile(archive.paths.archivedSites + asset, {encoding: 'utf8'}, function(error, data){
+        if (error){
+          exports.sendResponse(res, 'file not found', 404);
+        } else {
+          exports.sendResponse(res, data);
+        }
+      });
+    } else {
+      exports.sendResponse(res, data);
+    }
+  });
 };
 
+exports.sendResponse = function(res, obj, status){
+  status = status || 200;
+  res.writeHead(status, headers);
+  res.end(obj);
+}
 
+exports.collectData = function(req, cb){
+  var data = '';
+  req.on('data', function(chunk){
+    data += chunk;
+  });
+  req.on('end', function(){
+    cb(data);
+  });
+}
 
-// As you progress, keep thinking about what helper functions you can put here!
+exports.sendRedirect = function(res, location, status){
+  var status = status || 302;
+  res.writeHead(status, {Location: location});
+  res.end();
+}
